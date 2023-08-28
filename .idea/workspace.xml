@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ad5bf4d8-2f97-47a8-bccc-42e1cb1fb581" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lambda4j/App.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/lambda4j/AppTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="2UbDhR4iNfM1QGuuMoygac76ryB" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="JUnit.FunctionTests.identity_works">
+    <configuration name="AppTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="lambda4j" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lambda4j.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.lambda4j" />
+      <option name="MAIN_CLASS_NAME" value="com.lambda4j.AppTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FunctionTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="lambda4j" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lambda4j.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.lambda4j" />
+      <option name="MAIN_CLASS_NAME" value="com.lambda4j.FunctionTests" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FunctionTests.compose_works" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="lambda4j" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lambda4j.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.lambda4j" />
+      <option name="MAIN_CLASS_NAME" value="com.lambda4j.FunctionTests" />
+      <option name="METHOD_NAME" value="compose_works" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FunctionTests.identity_works" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="lambda4j" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lambda4j.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.lambda4j" />
+      <option name="MAIN_CLASS_NAME" value="com.lambda4j.FunctionTests" />
+      <option name="METHOD_NAME" value="identity_works" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FunctionTests.then_works" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="lambda4j" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lambda4j.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.lambda4j" />
+      <option name="MAIN_CLASS_NAME" value="com.lambda4j.FunctionTests" />
+      <option name="METHOD_NAME" value="then_works" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.FunctionTests.identity_works" />
+        <item itemvalue="JUnit.FunctionTests.then_works" />
+        <item itemvalue="JUnit.FunctionTests.compose_works" />
+        <item itemvalue="JUnit.FunctionTests" />
+        <item itemvalue="JUnit.AppTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ad5bf4d8-2f97-47a8-bccc-42e1cb1fb581" name="Changes" comment="" />
+      <created>1693199507266</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1693199507266</updated>
+    </task>
+    <servers />
+  </component>
+</project>
