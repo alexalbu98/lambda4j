@@ -23,12 +23,16 @@ public abstract class List<A> {
 
     public abstract List<A> removeLast();
 
+    public abstract <B> B foldLeft(B identity, Function<? super B, Function<? super A, ? extends B>> f);
+
+    public abstract <B> B foldRight(B identity, Function<? super A, Function<? super B, ? extends B>> f);
+
     public List<A> append(A a) {
         return new Cons<>(a, this);
     }
 
     public int length() {
-        return foldRight(this, 0, x -> y -> y + 1);
+        return foldRight(0, x -> y -> y + 1);
     }
 
     @SuppressWarnings("unchecked")
@@ -47,12 +51,6 @@ public abstract class List<A> {
 
     public static <A> List<A> concat(List<? extends A> list1, List<A> list2) {
         return concat(list(), list1, list2).eval();
-    }
-
-    public static <A, B> B foldRight(List<? extends A> list, B identity, Function<? super A, Function<? super B, ? extends B>> f) {
-        return list.isEmpty()
-                ? identity
-                : f.apply(list.head()).apply(foldRight(list.tail(), identity, f));
     }
 
     private static <A> TailCall<List<A>> concat(List<A> acc, List<? extends A> list1, List<A> list2) {
@@ -101,6 +99,14 @@ public abstract class List<A> {
 
         public List<A> removeLast() {
             throw new IllegalStateException("Remove last called on empty list.");
+        }
+
+        public <B> B foldLeft(B identity, Function<? super B, Function<? super A, ? extends B>> f) {
+            throw new IllegalStateException("Fold called empty list.");
+        }
+
+        public <B> B foldRight(B identity, Function<? super A, Function<? super B, ? extends B>> f) {
+            throw new IllegalStateException("Fold called empty list.");
         }
 
         public String toString() {
@@ -152,6 +158,14 @@ public abstract class List<A> {
             return reverse().tail().reverse();
         }
 
+        public <B> B foldLeft(B identity, Function<? super B, Function<? super A, ? extends B>> f) {
+            return foldLeft(identity, this, f).eval();
+        }
+
+        public <B> B foldRight(B identity, Function<? super A, Function<? super B, ? extends B>> f) {
+            return foldRight(this, identity, f);
+        }
+
         public String toString() {
             return String.format("[%sNIL]", toString(new StringBuilder(), this).eval());
         }
@@ -178,6 +192,18 @@ public abstract class List<A> {
             return !list.isEmpty() && f.apply(list.head())
                     ? sus(() -> dropWhile(list.tail(), f))
                     : ret(list);
+        }
+
+        private <B> TailCall<B> foldLeft(B acc, List<? extends A> list, Function<? super B, Function<? super A, ? extends B>> f) {
+            return list.isEmpty()
+                    ? ret(acc)
+                    : sus(() -> foldLeft(f.apply(acc).apply(list.head()), list.tail(), f));
+        }
+
+        private <B> B foldRight(List<? extends A> list, B identity, Function<? super A, Function<? super B, ? extends B>> f) {
+            return list.isEmpty()
+                    ? identity
+                    : f.apply(list.head()).apply(foldRight(list.tail(), identity, f));
         }
     }
 }
