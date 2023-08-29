@@ -1,5 +1,6 @@
 package com.lambda4j.list;
 
+import com.lambda4j.function.Function;
 import com.lambda4j.recursion.TailCall;
 
 import static com.lambda4j.recursion.TailCall.ret;
@@ -15,6 +16,8 @@ public abstract class List<A> {
     public abstract List<A> setHead(A h);
 
     public abstract List<A> drop(int n);
+
+    public abstract List<A> dropWhile(Function<A, Boolean> f);
 
     @SuppressWarnings("rawtypes")
     public static final List NIL = new Nil();
@@ -43,6 +46,10 @@ public abstract class List<A> {
         }
 
         public List<A> drop(int n) {
+            return this;
+        }
+
+        public List<A> dropWhile(Function<A, Boolean> f) {
             return this;
         }
 
@@ -82,6 +89,10 @@ public abstract class List<A> {
                     : drop(this, n).eval();
         }
 
+        public List<A> dropWhile(Function<A, Boolean> f) {
+            return dropWhile(this, f).eval();
+        }
+
         public String toString() {
             return String.format("[%sNIL]", toString(new StringBuilder(), this).eval());
         }
@@ -96,6 +107,12 @@ public abstract class List<A> {
             return n <= 0 || list.isEmpty()
                     ? ret(list)
                     : sus(() -> drop(list.tail(), n - 1));
+        }
+
+        private TailCall<List<A>> dropWhile(List<A> list, Function<A, Boolean> f) {
+            return !list.isEmpty() && f.apply(list.head())
+                    ? sus(() -> dropWhile(list.tail(), f))
+                    : ret(list);
         }
     }
 
