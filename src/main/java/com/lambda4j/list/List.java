@@ -14,6 +14,8 @@ public abstract class List<A> {
 
     public abstract List<A> setHead(A h);
 
+    public abstract List<A> drop(int n);
+
     @SuppressWarnings("rawtypes")
     public static final List NIL = new Nil();
 
@@ -38,6 +40,10 @@ public abstract class List<A> {
 
         public List<A> setHead(A h) {
             throw new IllegalStateException("Called setHead on empty list.");
+        }
+
+        public List<A> drop(int n) {
+            return this;
         }
 
         public String toString() {
@@ -70,6 +76,12 @@ public abstract class List<A> {
             return new Cons<>(h, tail());
         }
 
+        public List<A> drop(int n) {
+            return n <= 0
+                    ? this
+                    : drop(this, n).eval();
+        }
+
         public String toString() {
             return String.format("[%sNIL]", toString(new StringBuilder(), this).eval());
         }
@@ -78,6 +90,12 @@ public abstract class List<A> {
             return list.isEmpty()
                     ? ret(acc)
                     : sus(() -> toString(acc.append(list.head()).append(", "), list.tail()));
+        }
+
+        private TailCall<List<A>> drop(List<A> list, int n) {
+            return n <= 0 || list.isEmpty()
+                    ? ret(list)
+                    : sus(() -> drop(list.tail(), n - 1));
         }
     }
 
