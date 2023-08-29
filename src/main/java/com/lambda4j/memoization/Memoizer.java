@@ -11,11 +11,11 @@ public class Memoizer<T, U> {
     private Memoizer() {
     }
 
-    public static <T, U> Function<T, U> memoize(Function<T, U> function) {
+    public static <T, U> Function<T, U> memoize(Function<? super T, ? extends U> function) {
         return new Memoizer<T, U>().doMemoize(function);
     }
 
-    private Function<T, U> doMemoize(Function<T, U> function) {
+    private Function<T, U> doMemoize(Function<? super T, ? extends U> function) {
         return input -> cache.computeIfAbsent(input, function::apply);
     }
 }

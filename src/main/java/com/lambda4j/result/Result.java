@@ -3,7 +3,7 @@ package com.lambda4j.result;
 import com.lambda4j.effect.Effect;
 
 public interface Result<T> {
-    void bind(Effect<T> success, Effect<String> failure);
+    void bind(Effect<? super T> success, Effect<String> failure);
 
     static <T> Result<T> failure(String message) {
         return new Failure<>(message);
@@ -21,7 +21,7 @@ public interface Result<T> {
         }
 
         @Override
-        public void bind(Effect<T> success, Effect<String> failure) {
+        public void bind(Effect<? super T> success, Effect<String> failure) {
             success.apply(value);
         }
     }
@@ -34,7 +34,7 @@ public interface Result<T> {
         }
 
         @Override
-        public void bind(Effect<T> success, Effect<String> failure) {
+        public void bind(Effect<? super T> success, Effect<String> failure) {
             failure.apply(errorMessage);
         }
     }

@@ -1,11 +1,11 @@
 package com.lambda4j.tuple;
 
 public class Tuple<T, U> {
-    public final T _1;
-    public final U _2;
+    public final T first;
+    public final U second;
 
     public Tuple(T t, U u) {
-        this._1 = t;
-        this._2 = u;
+        this.first = t;
+        this.second = u;
     }
 }

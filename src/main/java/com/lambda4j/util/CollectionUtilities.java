@@ -26,14 +26,14 @@ public class CollectionUtilities {
         return Collections.unmodifiableList(Arrays.asList(Arrays.copyOf(t, t.length)));
     }
 
-    public static <T> T head(List<T> list) {
+    public static <T> T head(List<? extends T> list) {
         if (list.isEmpty()) {
             throw new IllegalStateException("head of empty list");
         }
         return list.get(0);
     }
 
-    public static <T> List<T> tail(List<T> list) {
+    public static <T> List<T> tail(List<? extends T> list) {
         if (list.isEmpty()) {
             throw new IllegalStateException("tail of empty list");
         }
@@ -42,7 +42,7 @@ public class CollectionUtilities {
         return Collections.unmodifiableList(workList);
     }
 
-    public static <T> List<T> reverse(List<T> list) {
+    public static <T> List<T> reverse(List<? extends T> list) {
         List<T> result = new ArrayList<>();
         for (int i = list.size() - 1; i >= 0; i--) {
             result.add(list.get(i));
@@ -50,13 +50,13 @@ public class CollectionUtilities {
         return Collections.unmodifiableList(result);
     }
 
-    public static <T> List<T> append(List<T> list, T t) {
+    public static <T> List<T> append(List<? extends T> list, T t) {
         List<T> ts = copy(list);
         ts.add(t);
         return Collections.unmodifiableList(ts);
     }
 
-    public <T, U> List<U> map(List<T> list, Function<T, U> f) {
+    public <T, U> List<U> map(List<? extends T> list, Function<? super T, ? extends U> f) {
         List<U> newList = new ArrayList<>();
         for (T value : list) {
             newList.add(f.apply(value));
@@ -64,7 +64,7 @@ public class CollectionUtilities {
         return Collections.unmodifiableList(newList);
     }
 
-    public static <T, U> U foldLeft(List<T> ts, U identity, Function<U, Function<T, U>> f) {
+    public static <T, U> U foldLeft(List<? extends T> ts, U identity, Function<? super U, Function<? super T, ? extends U>> f) {
         U result = identity;
         for (T t : ts) {
             result = f.apply(result).apply(t);
@@ -72,7 +72,7 @@ public class CollectionUtilities {
         return result;
     }
 
-    public static <T, U> U foldRight(List<T> ts, U identity, Function<T, Function<U, U>> f) {
+    public static <T, U> U foldRight(List<? extends T> ts, U identity, Function<? super T, Function<? super U, ? extends U>> f) {
         U result = identity;
         for (int i = ts.size(); i > 0; i--) {
             result = f.apply(ts.get(i - 1)).apply(result);
@@ -80,7 +80,7 @@ public class CollectionUtilities {
         return result;
     }
 
-    public static <T> List<T> unfold(T seed, Function<T, T> producer, Function<T, Boolean> condition) {
+    public static <T> List<T> unfold(T seed, Function<? super T, ? extends T> producer, Function<? super T, Boolean> condition) {
         List<T> result = new ArrayList<>();
         T temp = seed;
         while (condition.apply(temp)) {
@@ -90,11 +90,11 @@ public class CollectionUtilities {
         return Collections.unmodifiableList(result);
     }
 
-    public static <T> void forEach(Collection<T> ts, Effect<T> e) {
+    public static <T> void forEach(Collection<? extends T> ts, Effect<? super T> e) {
         for (T t : ts) e.apply(t);
     }
 
-    private static <T> List<T> copy(List<T> ts) {
+    private static <T> List<T> copy(List<? extends T> ts) {
         return new ArrayList<>(ts);
     }
 }
