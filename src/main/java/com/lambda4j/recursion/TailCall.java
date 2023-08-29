@@ -54,7 +54,11 @@ public abstract class TailCall<T> {
 
         @Override
         public T eval() {
-            throw new IllegalStateException("Suspend has no value");
+            TailCall<T> tailRec = this;
+            while (tailRec.isSuspend()) {
+                tailRec = tailRec.resume();
+            }
+            return tailRec.eval();
         }
 
         @Override
