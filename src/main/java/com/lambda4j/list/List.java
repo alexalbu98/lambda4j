@@ -27,8 +27,32 @@ public abstract class List<A> {
         return new Cons<>(a, this);
     }
 
+    public int length() {
+        return foldRight(this, 0, x -> y -> y + 1);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <A> List<A> list() {
+        return NIL;
+    }
+
+    @SafeVarargs
+    public static <A> List<A> list(A... a) {
+        List<A> n = list();
+        for (int i = a.length - 1; i >= 0; i--) {
+            n = new Cons<>(a[i], n);
+        }
+        return n;
+    }
+
     public static <A> List<A> concat(List<? extends A> list1, List<A> list2) {
         return concat(list(), list1, list2).eval();
+    }
+
+    public static <A, B> B foldRight(List<? extends A> list, B identity, Function<? super A, Function<? super B, ? extends B>> f) {
+        return list.isEmpty()
+                ? identity
+                : f.apply(list.head()).apply(foldRight(list.tail(), identity, f));
     }
 
     private static <A> TailCall<List<A>> concat(List<A> acc, List<? extends A> list1, List<A> list2) {
@@ -132,7 +156,7 @@ public abstract class List<A> {
             return String.format("[%sNIL]", toString(new StringBuilder(), this).eval());
         }
 
-        private TailCall<List<A>> reverse(List<A> acc, List<A> list) {
+        private TailCall<List<A>> reverse(List<A> acc, List<? extends A> list) {
             return list.isEmpty()
                     ? ret(acc)
                     : sus(() -> reverse(new Cons<>(list.head(), acc), list.tail()));
@@ -155,19 +179,5 @@ public abstract class List<A> {
                     ? sus(() -> dropWhile(list.tail(), f))
                     : ret(list);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <A> List<A> list() {
-        return NIL;
-    }
-
-    @SafeVarargs
-    public static <A> List<A> list(A... a) {
-        List<A> n = list();
-        for (int i = a.length - 1; i >= 0; i--) {
-            n = new Cons<>(a[i], n);
-        }
-        return n;
     }
 }
