@@ -146,8 +146,7 @@ public abstract class List<A> {
         }
 
         public List<A> reverse() {
-            List<A> acc = list();
-            return reverse(acc, this).eval();
+            return reverse(list(), this).eval();
         }
 
         public List<A> dropWhile(Function<? super A, Boolean> f) {
@@ -200,6 +199,7 @@ public abstract class List<A> {
                     : sus(() -> foldLeft(f.apply(acc).apply(list.head()), list.tail(), f));
         }
 
+        //TODO make recursive using tail call.
         private <B> B foldRight(List<? extends A> list, B identity, Function<? super A, Function<? super B, ? extends B>> f) {
             return list.isEmpty()
                     ? identity
