@@ -17,7 +17,22 @@ public abstract class List<A> {
 
     public abstract List<A> drop(int n);
 
+    public abstract List<A> reverse();
+
     public abstract List<A> dropWhile(Function<? super A, Boolean> f);
+
+    public abstract List<A> removeLast();
+
+    public List<A> append(A a) {
+        return new Cons<>(a, this);
+    }
+
+    public static <A> List<A> concat(List<? extends A> list1, List<A> list2) {
+        return list1.isEmpty()
+                ? list2
+                : new Cons<>(list1.head(), concat(list1.tail(), list2));
+    }
+
 
     @SuppressWarnings("rawtypes")
     public static final List NIL = new Nil();
@@ -49,8 +64,16 @@ public abstract class List<A> {
             return this;
         }
 
+        public List<A> reverse() {
+            return this;
+        }
+
         public List<A> dropWhile(Function<? super A, Boolean> f) {
             return this;
+        }
+
+        public List<A> removeLast() {
+            throw new IllegalStateException("Remove last called on empty list.");
         }
 
         public String toString() {
@@ -89,12 +112,27 @@ public abstract class List<A> {
                     : drop(this, n).eval();
         }
 
+        public List<A> reverse() {
+            List<A> acc = list();
+            return reverse(acc, this).eval();
+        }
+
         public List<A> dropWhile(Function<? super A, Boolean> f) {
             return dropWhile(this, f).eval();
         }
 
+        public List<A> removeLast() {
+            return reverse().tail().reverse();
+        }
+
         public String toString() {
             return String.format("[%sNIL]", toString(new StringBuilder(), this).eval());
+        }
+
+        private TailCall<List<A>> reverse(List<A> acc, List<A> list) {
+            return list.isEmpty()
+                    ? ret(acc)
+                    : sus(() -> reverse(new Cons<>(list.head(), acc), list.tail()));
         }
 
         private TailCall<StringBuilder> toString(StringBuilder acc, List<? extends A> list) {
@@ -129,15 +167,4 @@ public abstract class List<A> {
         }
         return n;
     }
-
-    public List<A> cons(A a) {
-        return new Cons<>(a, this);
-    }
-
-    public static <A> List<A> concat(List<? extends A> list1, List<A> list2) {
-        return list1.isEmpty()
-                ? list2
-                : new Cons<>(list1.head(), concat(list1.tail(), list2));
-    }
-
 }
