@@ -28,11 +28,14 @@ public abstract class List<A> {
     }
 
     public static <A> List<A> concat(List<? extends A> list1, List<A> list2) {
-        return list1.isEmpty()
-                ? list2
-                : new Cons<>(list1.head(), concat(list1.tail(), list2));
+        return concat(list(), list1, list2).eval();
     }
 
+    private static <A> TailCall<List<A>> concat(List<A> acc, List<? extends A> list1, List<A> list2) {
+        return list1.isEmpty()
+                ? ret(acc)
+                : sus(() -> concat(new Cons<>(list1.head(), list2), list1.tail(), list2));
+    }
 
     @SuppressWarnings("rawtypes")
     public static final List NIL = new Nil();
