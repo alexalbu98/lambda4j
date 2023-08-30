@@ -1,4 +1,4 @@
-package com.lambda4j.option;
+package com.lambda4j.result.option;
 
 import com.lambda4j.function.Function;
 import com.lambda4j.function.Supplier;

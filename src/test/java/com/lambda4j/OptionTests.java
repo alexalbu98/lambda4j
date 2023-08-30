@@ -1,10 +1,10 @@
 package com.lambda4j;
 
-import com.lambda4j.option.Option;
+import com.lambda4j.result.option.Option;
 import org.junit.jupiter.api.Test;
 
-import static com.lambda4j.option.Option.none;
-import static com.lambda4j.option.Option.some;
+import static com.lambda4j.result.option.Option.none;
+import static com.lambda4j.result.option.Option.some;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class OptionTests {

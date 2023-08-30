@@ -7,6 +7,9 @@ import static com.lambda4j.recursion.TailCall.ret;
 import static com.lambda4j.recursion.TailCall.sus;
 
 public abstract class List<A> {
+    List() {
+    }
+
     public abstract A head();
 
     public abstract List<A> tail();
@@ -41,9 +44,8 @@ public abstract class List<A> {
         return this.foldRight(0, x -> y -> y + 1);
     }
 
-    @SuppressWarnings("unchecked")
     public static <A> List<A> list() {
-        return NIL;
+        return new Nil<>();
     }
 
     @SafeVarargs
@@ -87,70 +89,4 @@ public abstract class List<A> {
                 : sus(() -> foldRight_(f.apply(ts.head()).apply(acc), ts.tail(), f));
     }
 
-    @SuppressWarnings("rawtypes")
-    private static final List NIL = new Nil();
-
-    List() {
-    }
-
-    private static class Nil<A> extends List<A> {
-        private Nil() {
-        }
-
-        public A head() {
-            throw new IllegalStateException("Head call on empty list");
-        }
-
-        public List<A> tail() {
-            throw new IllegalStateException("Tail call on empty list");
-        }
-
-        public boolean isEmpty() {
-            return true;
-        }
-
-        public List<A> setHead(A h) {
-            throw new IllegalStateException("Called setHead on empty list.");
-        }
-
-        public List<A> drop(int n) {
-            return this;
-        }
-
-        public List<A> reverse() {
-            return this;
-        }
-
-        public List<A> dropWhile(Function<? super A, Boolean> f) {
-            return this;
-        }
-
-        public List<A> removeLast() {
-            throw new IllegalStateException("Remove last called on empty list.");
-        }
-
-        public <B> B foldLeft(B identity, Function<? super B, Function<? super A, ? extends B>> f) {
-            throw new IllegalStateException("Fold called empty list.");
-        }
-
-        public <B> B foldRight(B identity, Function<? super A, Function<? super B, ? extends B>> f) {
-            throw new IllegalStateException("Fold called empty list.");
-        }
-
-        public <B> List<B> map(Function<? super A, ? extends B> f) {
-            throw new IllegalStateException("Map called on empty list.");
-        }
-
-        public List<A> filter(Function<? super A, Boolean> f) {
-            return this;
-        }
-
-        public <B> List<B> flatMap(Function<? super A, List<B>> f) {
-            throw new IllegalStateException("Flatmap called on empty list.");
-        }
-
-        public String toString() {
-            return "[NIL]";
-        }
-    }
 }
