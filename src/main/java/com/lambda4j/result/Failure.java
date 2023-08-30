@@ -1,5 +1,6 @@
 package com.lambda4j.result;
 
+import com.lambda4j.effect.Effect;
 import com.lambda4j.function.Function;
 import com.lambda4j.function.Supplier;
 
@@ -29,15 +30,31 @@ class Failure<V> extends Result<V> {
         return defaultValue;
     }
 
-    public V getOrElse(Supplier<V> defaultValue) {
+    public V getOrElse(Supplier<? extends V> defaultValue) {
         return defaultValue.get();
     }
 
-    public <U> Result<U> map(Function<V, U> f) {
+    public <U> Result<U> map(Function<? super V, ? extends U> f) {
         return failure(exception);
     }
 
-    public <U> Result<U> flatMap(Function<V, Result<U>> f) {
+    public <U> Result<U> flatMap(Function<? super V, Result<U>> f) {
         return failure(exception);
+    }
+
+    public Result<V> mapFailure(String s) {
+        return failure(new IllegalStateException(s, exception));
+    }
+
+    public void forEach(Effect<V> ef) {
+
+    }
+
+    public void forEachOrThrow(Effect<V> ef) {
+        throw exception;
+    }
+
+    public Result<RuntimeException> forEachOrException(Effect<V> ef) {
+        return success(exception);
     }
 }

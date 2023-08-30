@@ -1,5 +1,6 @@
 package com.lambda4j.result;
 
+import com.lambda4j.effect.Effect;
 import com.lambda4j.function.Function;
 import com.lambda4j.function.Supplier;
 
@@ -19,11 +20,11 @@ class Success<V> extends Result<V> {
         return value;
     }
 
-    public V getOrElse(Supplier<V> defaultValue) {
+    public V getOrElse(Supplier<? extends V> defaultValue) {
         return value;
     }
 
-    public <U> Result<U> map(Function<V, U> f) {
+    public <U> Result<U> map(Function<? super V, ? extends U> f) {
         try {
             return success(f.apply(value));
         } catch (Exception e) {
@@ -31,11 +32,28 @@ class Success<V> extends Result<V> {
         }
     }
 
-    public <U> Result<U> flatMap(Function<V, Result<U>> f) {
+    public <U> Result<U> flatMap(Function<? super V, Result<U>> f) {
         try {
             return f.apply(value);
         } catch (Exception e) {
             return failure(e);
         }
+    }
+
+    public Result<V> mapFailure(String s) {
+        return this;
+    }
+
+    public void forEach(Effect<V> ef) {
+        ef.apply(value);
+    }
+
+    public void forEachOrThrow(Effect<V> ef) {
+        ef.apply(value);
+    }
+
+    public Result<RuntimeException> forEachOrException(Effect<V> ef) {
+        ef.apply(value);
+        return empty();
     }
 }
