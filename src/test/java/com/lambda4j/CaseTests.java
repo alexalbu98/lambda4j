@@ -15,13 +15,13 @@ class CaseTests {
     @Test
     void case_works() {
         Result<String> result1 = verifyString("test");
-        result1.bind(string -> assertEquals("test", string), Assertions::assertNull);
+        assertEquals("test", result1.getOrElse(() -> ""));
 
         Result<String> result2 = verifyString(null);
-        result2.bind(Assertions::assertNull, Assertions::assertNotNull);
+        assertEquals("", result2.getOrElse(() -> ""));
 
         Result<String> result3 = verifyString("");
-        result3.bind(Assertions::assertNull, Assertions::assertNotNull);
+        assertEquals("", result3.getOrElse(() -> ""));
     }
 
     private Result<String> verifyString(String s) {
