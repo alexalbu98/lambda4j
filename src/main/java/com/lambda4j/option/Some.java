@@ -3,6 +3,8 @@ package com.lambda4j.option;
 import com.lambda4j.function.Function;
 import com.lambda4j.function.Supplier;
 
+import java.util.Objects;
+
 class Some<A> extends Option<A> {
     private final A value;
 
@@ -28,5 +30,15 @@ class Some<A> extends Option<A> {
 
     public String toString() {
         return String.format("Some(%s)", value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Some) && this.value.equals(((Some<?>) o).value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value);
     }
 }

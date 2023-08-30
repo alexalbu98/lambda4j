@@ -48,6 +48,16 @@ public abstract class Option<A> {
         public String toString() {
             return "None";
         }
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof None;
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
     }
 
     public static <A> Option<A> some(A a) {
