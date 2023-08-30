@@ -29,6 +29,10 @@ public abstract class List<A> {
 
     public abstract <B> List<B> map(Function<A, B> f);
 
+    public abstract List<A> filter(Function<A, Boolean> f);
+
+    public abstract <B> List<B> flatMap(Function<A, List<B>> f);
+
     public List<A> append(A a) {
         return new Cons<>(a, this);
     }
@@ -130,6 +134,14 @@ public abstract class List<A> {
             throw new IllegalStateException("Map called on empty list.");
         }
 
+        public List<A> filter(Function<A, Boolean> f) {
+            return this;
+        }
+
+        public <B> List<B> flatMap(Function<A, List<B>> f) {
+            throw new IllegalStateException("Flatmap called on empty list.");
+        }
+
         public String toString() {
             return "[NIL]";
         }
@@ -188,6 +200,14 @@ public abstract class List<A> {
 
         public <B> List<B> map(Function<A, B> f) {
             return foldRight(list(), h -> t -> new Cons<>(f.apply(h), t));
+        }
+
+        public List<A> filter(Function<A, Boolean> f) {
+            return foldRight(list(), h -> t -> f.apply(h) ? new Cons<>(h, t) : t);
+        }
+
+        public <B> List<B> flatMap(Function<A, List<B>> f) {
+            return foldRight(list(), h -> t -> concat(f.apply(h), t));
         }
 
         public String toString() {
