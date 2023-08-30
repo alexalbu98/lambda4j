@@ -1,5 +1,6 @@
 package com.lambda4j.option;
 
+import com.lambda4j.function.Function;
 import com.lambda4j.function.Supplier;
 
 class Some<A> extends Option<A> {
@@ -10,14 +11,22 @@ class Some<A> extends Option<A> {
     }
 
     public A getOrThrow() {
-        return this.value;
+        return value;
     }
 
-    public A getOrElse(Supplier<A> defaultValue) {
-        return this.value;
+    public A getOrElse(Supplier<? extends A> defaultValue) {
+        return value;
+    }
+
+    public <B> Option<B> map(Function<? super A, ? extends B> f) {
+        return new Some<>(f.apply(value));
+    }
+
+    public <B> Option<B> flatMap(Function<? super A, Option<B>> f) {
+        return f.apply(value);
     }
 
     public String toString() {
-        return String.format("Some(%s)", this.value);
+        return String.format("Some(%s)", value);
     }
 }

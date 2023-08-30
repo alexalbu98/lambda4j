@@ -1,5 +1,6 @@
 package com.lambda4j.option;
 
+import com.lambda4j.function.Function;
 import com.lambda4j.function.Supplier;
 
 public abstract class Option<A> {
@@ -8,7 +9,11 @@ public abstract class Option<A> {
 
     protected abstract A getOrThrow();
 
-    public abstract A getOrElse(Supplier<A> defaultValue);
+    public abstract A getOrElse(Supplier<? extends A> defaultValue);
+
+    public abstract <B> Option<B> map(Function<? super A, ? extends B> f);
+
+    public abstract <B> Option<B> flatMap(Function<? super A, Option<B>> f);
 
     private static class None<A> extends Option<A> {
         private None() {
@@ -18,8 +23,16 @@ public abstract class Option<A> {
             throw new IllegalStateException("get called on None");
         }
 
-        public A getOrElse(Supplier<A> defaultValue) {
+        public A getOrElse(Supplier<? extends A> defaultValue) {
             return defaultValue.get();
+        }
+
+        public <B> Option<B> map(Function<? super A, ? extends B> f) {
+            return none();
+        }
+
+        public <B> Option<B> flatMap(Function<? super A, Option<B>> f) {
+            return none();
         }
 
         public String toString() {

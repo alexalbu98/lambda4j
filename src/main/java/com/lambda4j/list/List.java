@@ -27,11 +27,11 @@ public abstract class List<A> {
 
     public abstract <B> B foldRight(B identity, Function<? super A, Function<? super B, ? extends B>> f);
 
-    public abstract <B> List<B> map(Function<A, B> f);
+    public abstract <B> List<B> map(Function<? super A, ? extends B> f);
 
-    public abstract List<A> filter(Function<A, Boolean> f);
+    public abstract List<A> filter(Function<? super A, Boolean> f);
 
-    public abstract <B> List<B> flatMap(Function<A, List<B>> f);
+    public abstract <B> List<B> flatMap(Function<? super A, List<B>> f);
 
     public List<A> append(A a) {
         return new Cons<>(a, this);
@@ -137,16 +137,15 @@ public abstract class List<A> {
             throw new IllegalStateException("Fold called empty list.");
         }
 
-        @Override
-        public <B> List<B> map(Function<A, B> f) {
+        public <B> List<B> map(Function<? super A, ? extends B> f) {
             throw new IllegalStateException("Map called on empty list.");
         }
 
-        public List<A> filter(Function<A, Boolean> f) {
+        public List<A> filter(Function<? super A, Boolean> f) {
             return this;
         }
 
-        public <B> List<B> flatMap(Function<A, List<B>> f) {
+        public <B> List<B> flatMap(Function<? super A, List<B>> f) {
             throw new IllegalStateException("Flatmap called on empty list.");
         }
 

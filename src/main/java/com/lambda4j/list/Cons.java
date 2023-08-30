@@ -58,15 +58,15 @@ class Cons<A> extends List<A> {
         return foldRight_(identity, this.reverse(), f).eval();
     }
 
-    public <B> List<B> map(Function<A, B> f) {
+    public <B> List<B> map(Function<? super A, ? extends B> f) {
         return foldRight(list(), h -> t -> new Cons<>(f.apply(h), t));
     }
 
-    public List<A> filter(Function<A, Boolean> f) {
+    public List<A> filter(Function<? super A, Boolean> f) {
         return foldRight(list(), h -> t -> f.apply(h) ? new Cons<>(h, t) : t);
     }
 
-    public <B> List<B> flatMap(Function<A, List<B>> f) {
+    public <B> List<B> flatMap(Function<? super A, List<B>> f) {
         return foldRight(list(), h -> t -> concat(f.apply(h), t));
     }
 
