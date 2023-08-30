@@ -32,7 +32,7 @@ public abstract class List<A> {
     }
 
     public int length() {
-        return foldRight(0, x -> y -> y + 1);
+        return this.foldRight(0, x -> y -> y + 1);
     }
 
     @SuppressWarnings("unchecked")
@@ -50,13 +50,27 @@ public abstract class List<A> {
     }
 
     public static <A> List<A> concat(List<? extends A> list1, List<A> list2) {
-        return concat(list(), list1, list2).eval();
+        return concat_(list(), list1, list2).eval();
     }
 
-    private static <A> TailCall<List<A>> concat(List<A> acc, List<? extends A> list1, List<A> list2) {
+    public static <A> List<A> flatten(List<List<A>> list) {
+        return foldRight(list, List.list(), x -> y -> concat(x, y));
+    }
+
+    public static <A, B> B foldRight(List<A> list, B identity, Function<? super A, Function<? super B, ? extends B>> f) {
+        return foldRight_(identity, list.reverse(), f).eval();
+    }
+
+    private static <A> TailCall<List<A>> concat_(List<A> acc, List<? extends A> list1, List<A> list2) {
         return list1.isEmpty()
                 ? ret(acc)
-                : sus(() -> concat(new Cons<>(list1.head(), list2), list1.tail(), list2));
+                : sus(() -> concat_(new Cons<>(list1.head(), list2), list1.tail(), list2));
+    }
+
+    protected static <A, B> TailCall<B> foldRight_(B acc, List<? extends A> ts, Function<? super A, Function<? super B, ? extends B>> f) {
+        return ts.isEmpty()
+                ? ret(acc)
+                : sus(() -> foldRight_(f.apply(ts.head()).apply(acc), ts.tail(), f));
     }
 
     @SuppressWarnings("rawtypes")
@@ -142,15 +156,15 @@ public abstract class List<A> {
         public List<A> drop(int n) {
             return n <= 0
                     ? this
-                    : drop(this, n).eval();
+                    : drop_(this, n).eval();
         }
 
         public List<A> reverse() {
-            return reverse(list(), this).eval();
+            return reverse_(list(), this).eval();
         }
 
         public List<A> dropWhile(Function<? super A, Boolean> f) {
-            return dropWhile(this, f).eval();
+            return dropWhile_(this, f).eval();
         }
 
         public List<A> removeLast() {
@@ -158,52 +172,45 @@ public abstract class List<A> {
         }
 
         public <B> B foldLeft(B identity, Function<? super B, Function<? super A, ? extends B>> f) {
-            return foldLeft(identity, this, f).eval();
+            return foldLeft_(identity, this, f).eval();
         }
 
         public <B> B foldRight(B identity, Function<? super A, Function<? super B, ? extends B>> f) {
-            return foldRight(this, identity, f);
+            return foldRight_(identity, this.reverse(), f).eval();
         }
 
         public String toString() {
-            return String.format("[%sNIL]", toString(new StringBuilder(), this).eval());
+            return String.format("[%sNIL]", toString_(new StringBuilder(), this).eval());
         }
 
-        private TailCall<List<A>> reverse(List<A> acc, List<? extends A> list) {
+        private TailCall<List<A>> reverse_(List<A> acc, List<? extends A> list) {
             return list.isEmpty()
                     ? ret(acc)
-                    : sus(() -> reverse(new Cons<>(list.head(), acc), list.tail()));
+                    : sus(() -> reverse_(new Cons<>(list.head(), acc), list.tail()));
         }
 
-        private TailCall<StringBuilder> toString(StringBuilder acc, List<? extends A> list) {
+        private TailCall<StringBuilder> toString_(StringBuilder acc, List<? extends A> list) {
             return list.isEmpty()
                     ? ret(acc)
-                    : sus(() -> toString(acc.append(list.head()).append(", "), list.tail()));
+                    : sus(() -> toString_(acc.append(list.head()).append(", "), list.tail()));
         }
 
-        private TailCall<List<A>> drop(List<A> list, int n) {
+        private TailCall<List<A>> drop_(List<A> list, int n) {
             return n <= 0 || list.isEmpty()
                     ? ret(list)
-                    : sus(() -> drop(list.tail(), n - 1));
+                    : sus(() -> drop_(list.tail(), n - 1));
         }
 
-        private TailCall<List<A>> dropWhile(List<A> list, Function<? super A, Boolean> f) {
+        private TailCall<List<A>> dropWhile_(List<A> list, Function<? super A, Boolean> f) {
             return !list.isEmpty() && f.apply(list.head())
-                    ? sus(() -> dropWhile(list.tail(), f))
+                    ? sus(() -> dropWhile_(list.tail(), f))
                     : ret(list);
         }
 
-        private <B> TailCall<B> foldLeft(B acc, List<? extends A> list, Function<? super B, Function<? super A, ? extends B>> f) {
+        private <B> TailCall<B> foldLeft_(B acc, List<? extends A> list, Function<? super B, Function<? super A, ? extends B>> f) {
             return list.isEmpty()
                     ? ret(acc)
-                    : sus(() -> foldLeft(f.apply(acc).apply(list.head()), list.tail(), f));
-        }
-
-        //TODO make recursive using tail call.
-        private <B> B foldRight(List<? extends A> list, B identity, Function<? super A, Function<? super B, ? extends B>> f) {
-            return list.isEmpty()
-                    ? identity
-                    : f.apply(list.head()).apply(foldRight(list.tail(), identity, f));
+                    : sus(() -> foldLeft_(f.apply(acc).apply(list.head()), list.tail(), f));
         }
     }
 }
