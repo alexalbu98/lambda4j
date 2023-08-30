@@ -27,6 +27,8 @@ public abstract class List<A> {
 
     public abstract <B> B foldRight(B identity, Function<? super A, Function<? super B, ? extends B>> f);
 
+    public abstract <B> List<B> map(Function<A, B> f);
+
     public List<A> append(A a) {
         return new Cons<>(a, this);
     }
@@ -123,6 +125,11 @@ public abstract class List<A> {
             throw new IllegalStateException("Fold called empty list.");
         }
 
+        @Override
+        public <B> List<B> map(Function<A, B> f) {
+            throw new IllegalStateException("Map called on empty list.");
+        }
+
         public String toString() {
             return "[NIL]";
         }
@@ -177,6 +184,10 @@ public abstract class List<A> {
 
         public <B> B foldRight(B identity, Function<? super A, Function<? super B, ? extends B>> f) {
             return foldRight_(identity, this.reverse(), f).eval();
+        }
+
+        public <B> List<B> map(Function<A, B> f) {
+            return foldRight(list(), h -> t -> new Cons<>(f.apply(h), t));
         }
 
         public String toString() {
