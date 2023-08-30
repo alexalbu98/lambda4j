@@ -55,8 +55,16 @@ public abstract class List<A> {
         return n;
     }
 
+    public static <A> List<A> list(java.util.List<? extends A> a) {
+        List<A> n = list();
+        for (int i = a.size() - 1; i >= 0; i--) {
+            n = new Cons<>(a.get(i), n);
+        }
+        return n;
+    }
+
     public static <A> List<A> concat(List<? extends A> list1, List<A> list2) {
-        return concat_(list(), list1, list2).eval();
+        return concat_(list1.reverse(), list2).eval();
     }
 
     public static <A> List<A> flatten(List<List<A>> list) {
@@ -67,10 +75,10 @@ public abstract class List<A> {
         return foldRight_(identity, list.reverse(), f).eval();
     }
 
-    private static <A> TailCall<List<A>> concat_(List<A> acc, List<? extends A> list1, List<A> list2) {
+    private static <A> TailCall<List<A>> concat_(List<? extends A> list1, List<A> list2) {
         return list1.isEmpty()
-                ? ret(acc)
-                : sus(() -> concat_(new Cons<>(list1.head(), list2), list1.tail(), list2));
+                ? ret(list2)
+                : sus(() -> concat_(list1.tail(), new Cons<>(list1.head(), list2)));
     }
 
     protected static <A, B> TailCall<B> foldRight_(B acc, List<? extends A> ts, Function<? super A, Function<? super B, ? extends B>> f) {
