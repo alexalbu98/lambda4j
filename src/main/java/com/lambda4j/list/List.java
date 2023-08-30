@@ -71,7 +71,7 @@ public abstract class List<A> {
         return foldRight(list, List.list(), x -> y -> concat(x, y));
     }
 
-    public static <A, B> B foldRight(List<A> list, B identity, Function<? super A, Function<? super B, ? extends B>> f) {
+    public static <A, B> B foldRight(List<? extends A> list, B identity, Function<? super A, Function<? super B, ? extends B>> f) {
         return foldRight_(identity, list.reverse(), f).eval();
     }
 
