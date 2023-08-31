@@ -67,6 +67,18 @@ public abstract class List<A> {
                 : getAt_(this, index).eval();
     }
 
+    public Tuple<List<A>, List<A>> splitAt(int index) {
+        return index < 0
+                ? splitAt(0)
+                : index > length()
+                ? splitAt(length())
+                : splitAt(list(), this.reverse(), this.length() - index).eval();
+    }
+
+    public boolean hasSubsequence(List<A> sublist) {
+        return hasSubList(this, sublist);
+    }
+
     public static <A> List<A> list() {
         return new Nil<>();
     }
@@ -113,6 +125,40 @@ public abstract class List<A> {
 
     public static <A, B, C> List<C> zipWith(List<A> list1, List<B> list2, Function<? super A, Function<? super B, ? extends C>> f) {
         return zipWith_(list(), list1, list2, f).eval().reverse();
+    }
+
+    public static <A> boolean hasSubList(List<A> list, List<A> sub) {
+        return hasSubList_(list, sub).eval();
+    }
+
+    public static <A> Boolean startsWith(List<A> list, List<A> sub) {
+        return startsWith_(list, sub).eval();
+    }
+
+    private static <A> TailCall<Boolean> hasSubList_(List<A> list, List<A> sub) {
+        return list.isEmpty()
+                ? ret(sub.isEmpty())
+                : startsWith(list, sub)
+                ? ret(true)
+                : sus(() -> hasSubList_(list.tail(), sub));
+    }
+
+    private static <A> TailCall<Boolean> startsWith_(List<A> list,
+                                                     List<A> sub) {
+        return sub.isEmpty()
+                ? ret(Boolean.TRUE)
+                : list.isEmpty()
+                ? ret(Boolean.FALSE)
+                : list.head().equals(sub.head())
+                ? sus(() -> startsWith_(list.tail(), sub.tail()))
+                : ret(Boolean.FALSE);
+    }
+
+    private TailCall<Tuple<List<A>, List<A>>> splitAt(List<A> acc,
+                                                      List<A> list, int i) {
+        return i == 0 || list.isEmpty()
+                ? ret(new Tuple<>(list.reverse(), acc))
+                : sus(() -> splitAt(acc.append(list.head()), list.tail(), i - 1));
     }
 
     private static <A> TailCall<Result<A>> getAt_(List<A> list, int index) {

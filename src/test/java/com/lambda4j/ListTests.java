@@ -164,6 +164,24 @@ class ListTests {
         assertEquals("three", list.getAt(2).getOrElse(""));
     }
 
+    @Test
+    void split_at_works() {
+        List<String> list = list("one", "two", "three", "four");
+        assertEquals("[one, two, NIL]", list.splitAt(2).first.toString());
+        assertEquals("[three, four, NIL]", list.splitAt(2).second.toString());
+    }
+
+    @Test
+    void has_sublist_works() {
+        List<String> list1 = list("one", "two", "three", "four");
+        List<String> list2 = list("one", "two");
+        List<String> list3 = list("two", "three");
+        assertTrue(hasSubList(list1, list2));
+        assertTrue(hasSubList(list1, list3));
+        assertTrue(list1.hasSubsequence(list2));
+        assertTrue(list1.hasSubsequence(list3));
+    }
+
     private List<Character> convertStringToChars(String inputString) {
         java.util.List<Character> chars = inputString.chars()
                 .mapToObj(c -> (char) c)
