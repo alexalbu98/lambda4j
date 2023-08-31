@@ -97,6 +97,18 @@ public abstract class List<A> {
         return foldRight_(identity, list.reverse(), f).eval();
     }
 
+    public static <A, B, C> List<C> zipWith(List<A> list1, List<B> list2, Function<? super A, Function<? super B, ? extends C>> f) {
+        return zipWith_(list(), list1, list2, f).eval().reverse();
+    }
+
+    private static <A, B, C> TailCall<List<C>> zipWith_(List<C> acc, List<A> list1, List<B> list2, Function<? super A, Function<? super B, ? extends C>> f) {
+        return list1.isEmpty() || list2.isEmpty()
+                ? ret(acc)
+                : sus(() -> zipWith_(
+                new Cons<>(f.apply(list1.head()).apply(list2.head()), acc),
+                list1.tail(), list2.tail(), f));
+    }
+
     private static <A> TailCall<List<A>> concat_(List<? extends A> list1, List<A> list2) {
         return list1.isEmpty()
                 ? ret(list2)

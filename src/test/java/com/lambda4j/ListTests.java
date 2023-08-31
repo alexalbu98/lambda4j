@@ -144,6 +144,15 @@ class ListTests {
         assertEquals(2, list.lengthMemoized());
     }
 
+    @Test
+    void zip_with_works() {
+        List<String> list1 = list("one", "two", "three");
+        List<String> list2 = list(" one", " two", " three");
+        List<String> result = zipWith(list1, list2, x -> y -> x + y);
+        assertEquals("one one", result.head());
+        assertEquals(3, result.lengthMemoized());
+    }
+
     private List<Character> convertStringToChars(String inputString) {
         java.util.List<Character> chars = inputString.chars()
                 .mapToObj(c -> (char) c)
