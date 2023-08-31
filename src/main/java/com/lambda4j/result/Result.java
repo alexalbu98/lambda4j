@@ -80,17 +80,6 @@ public abstract class Result<V> implements Serializable {
                 : failure(message);
     }
 
-    public static <T> Result<T> of(Function<? super T, Boolean> predicate, T value) {
-        try {
-            return predicate.apply(value)
-                    ? success(value)
-                    : empty();
-        } catch (Exception e) {
-            String errMessage = String.format("Exception while evaluating predicate: %s", value);
-            return Result.failure(new IllegalStateException(errMessage, e));
-        }
-    }
-
     public static <T> Result<T> of(Function<? super T, Boolean> predicate, T value, String message) {
         try {
             return predicate.apply(value)
