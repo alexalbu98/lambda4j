@@ -5,6 +5,10 @@ import com.lambda4j.recursion.TailCall;
 import com.lambda4j.result.Result;
 import com.lambda4j.tuple.Tuple;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.lambda4j.recursion.TailCall.ret;
 import static com.lambda4j.recursion.TailCall.sus;
 
@@ -77,6 +81,20 @@ public abstract class List<A> {
 
     public boolean hasSubsequence(List<A> sublist) {
         return hasSubList(this, sublist);
+    }
+
+    public <B> Map<B, List<A>> groupBy(Function<? super A, ? extends B> f) {
+        List<A> workList = this;
+        Map<B, List<A>> m = new HashMap<>();
+        while (!workList.isEmpty()) {
+            final B k = f.apply(workList.head());
+            List<A> rt = m.get(k);
+            if (rt == null) rt = list();
+            rt = rt.append(workList.head());
+            m.put(k, rt);
+            workList = workList.tail();
+        }
+        return Collections.unmodifiableMap(m);
     }
 
     public static <A> List<A> list() {

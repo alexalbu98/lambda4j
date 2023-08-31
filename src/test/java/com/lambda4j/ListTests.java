@@ -5,6 +5,7 @@ import com.lambda4j.result.Result;
 import com.lambda4j.tuple.Tuple;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.lambda4j.list.List.*;
@@ -180,6 +181,14 @@ class ListTests {
         assertTrue(hasSubList(list1, list3));
         assertTrue(list1.hasSubsequence(list2));
         assertTrue(list1.hasSubsequence(list3));
+    }
+
+    @Test
+    void group_by_works() {
+        List<String> list = list("one", "two", "three", "four");
+        Map<String, List<String>> map = list.groupBy(x -> x.contains("o") ? "contains" : "not");
+        assertEquals(3, map.get("contains").lengthMemoized());
+        assertEquals(1, map.get("not").lengthMemoized());
     }
 
     private List<Character> convertStringToChars(String inputString) {
