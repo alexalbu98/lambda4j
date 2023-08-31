@@ -61,6 +61,12 @@ public abstract class List<A> {
         return this.foldRight(0, x -> y -> y + 1);
     }
 
+    public Result<A> getAt(int index) {
+        return index < 0 || index >= length()
+                ? Result.failure("Index out of bound")
+                : getAt_(this, index).eval();
+    }
+
     public static <A> List<A> list() {
         return new Nil<>();
     }
@@ -107,6 +113,12 @@ public abstract class List<A> {
 
     public static <A, B, C> List<C> zipWith(List<A> list1, List<B> list2, Function<? super A, Function<? super B, ? extends C>> f) {
         return zipWith_(list(), list1, list2, f).eval().reverse();
+    }
+
+    private static <A> TailCall<Result<A>> getAt_(List<A> list, int index) {
+        return index == 0
+                ? TailCall.ret(Result.success(list.head()))
+                : TailCall.sus(() -> getAt_(list.tail(), index - 1));
     }
 
     private static <A, B, C> TailCall<List<C>> zipWith_(List<C> acc, List<A> list1, List<B> list2, Function<? super A, Function<? super B, ? extends C>> f) {

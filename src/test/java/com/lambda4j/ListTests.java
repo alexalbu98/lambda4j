@@ -157,6 +157,13 @@ class ListTests {
         assertEquals(list2.map(String::trim).toString(), listTuple.second.toString());
     }
 
+    @Test
+    void get_at_works() {
+        List<String> list = list("one", "two", "three");
+        assertEquals("one", list.getAt(0).getOrElse(""));
+        assertEquals("three", list.getAt(2).getOrElse(""));
+    }
+
     private List<Character> convertStringToChars(String inputString) {
         java.util.List<Character> chars = inputString.chars()
                 .mapToObj(c -> (char) c)
