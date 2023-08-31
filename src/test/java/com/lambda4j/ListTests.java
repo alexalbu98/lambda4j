@@ -18,6 +18,7 @@ class ListTests {
         List<Integer> integerList = list(1, 2, 3);
         assertFalse(integerList.isEmpty());
         assertEquals(3, integerList.length());
+        assertEquals(3, integerList.lengthMemoized());
     }
 
     @Test

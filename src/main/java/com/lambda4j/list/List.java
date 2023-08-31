@@ -14,6 +14,8 @@ public abstract class List<A> {
 
     public abstract List<A> tail();
 
+    public abstract int lengthMemoized();
+
     public abstract boolean isEmpty();
 
     public abstract List<A> setHead(A h);

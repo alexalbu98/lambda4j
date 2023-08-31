@@ -14,6 +14,10 @@ class Nil<A> extends List<A> {
         throw new IllegalStateException("Tail call on empty list");
     }
 
+    public int lengthMemoized() {
+        return 0;
+    }
+
     public boolean isEmpty() {
         return true;
     }

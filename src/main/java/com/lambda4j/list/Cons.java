@@ -9,11 +9,13 @@ import static com.lambda4j.recursion.TailCall.sus;
 class Cons<A> extends List<A> {
     private final A head;
     private final List<A> tail;
+    private final int length;
 
     Cons(A head, List<A> tail) {
         super();
         this.head = head;
         this.tail = tail;
+        this.length = tail.lengthMemoized() + 1;
     }
 
     public A head() {
@@ -22,6 +24,10 @@ class Cons<A> extends List<A> {
 
     public List<A> tail() {
         return tail;
+    }
+
+    public int lengthMemoized() {
+        return length;
     }
 
     public boolean isEmpty() {
