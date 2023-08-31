@@ -97,6 +97,14 @@ public abstract class List<A> {
         return Collections.unmodifiableMap(m);
     }
 
+    public boolean exists(Function<? super A, Boolean> p) {
+        return foldLeft(false, x -> y -> x || p.apply(y));
+    }
+
+    public boolean forAll(Function<? super A, Boolean> p) {
+        return !exists(x -> !p.apply(x));
+    }
+
     public static <A> List<A> list() {
         return new Nil<>();
     }
@@ -155,6 +163,12 @@ public abstract class List<A> {
 
     public static <A, S> List<A> unfold(S z, Function<? super S, Result<Tuple<A, S>>> f) {
         return unfold(list(), z, f).eval().reverse();
+    }
+
+    public static List<Integer> range(int start, int end) {
+        return List.unfold(start, i -> i < end
+                ? Result.success(new Tuple<>(i, i + 1))
+                : Result.empty());
     }
 
     private static <A, S> TailCall<List<A>> unfold(List<A> acc, S z, Function<? super S, Result<Tuple<A, S>>> f) {

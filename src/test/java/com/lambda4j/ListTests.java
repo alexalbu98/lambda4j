@@ -192,13 +192,29 @@ class ListTests {
     }
 
     @Test
-    void unfold_test() {
+    void unfold_works() {
         List<Integer> list = unfold(0, i -> i < 10
                 ? Result.success(new Tuple<>(i, i + 1))
                 : Result.empty());
 
         assertEquals(10, list.lengthMemoized());
         assertEquals(9, list.lastOption().getOrElse(0));
+    }
+
+    @Test
+    void exists_works() {
+        List<String> list = list("one", "two", "three", "four");
+        assertTrue(list.exists(x -> x.contains("w")));
+        assertTrue(list.exists(x -> x.length() == 5));
+        assertFalse(list.exists(x -> x.contains("0")));
+    }
+
+    @Test
+    void for_all_works() {
+        List<String> list1 = list("one", "two", "six");
+        List<String> list2 = list("one", "two", "six", "four");
+        assertTrue(list1.forAll(x -> x.length() == 3));
+        assertFalse(list2.forAll(x -> x.length() == 3));
     }
 
     private List<Character> convertStringToChars(String inputString) {
