@@ -153,6 +153,17 @@ public abstract class List<A> {
         return startsWith_(list, sub).eval();
     }
 
+    public static <A, S> List<A> unfold(S z, Function<? super S, Result<Tuple<A, S>>> f) {
+        return unfold(list(), z, f).eval().reverse();
+    }
+
+    private static <A, S> TailCall<List<A>> unfold(List<A> acc, S z, Function<? super S, Result<Tuple<A, S>>> f) {
+        Result<Tuple<A, S>> r = f.apply(z);
+        Result<TailCall<List<A>>> result =
+                r.map(rt -> sus(() -> unfold(acc.append(rt.first), rt.second, f)));
+        return result.getOrElse(ret(acc));
+    }
+
     private static <A> TailCall<Boolean> hasSubList_(List<A> list, List<A> sub) {
         return list.isEmpty()
                 ? ret(sub.isEmpty())

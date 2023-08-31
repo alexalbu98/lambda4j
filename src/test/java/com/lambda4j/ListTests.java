@@ -191,6 +191,16 @@ class ListTests {
         assertEquals(1, map.get("not").lengthMemoized());
     }
 
+    @Test
+    void unfold_test() {
+        List<Integer> list = unfold(0, i -> i < 10
+                ? Result.success(new Tuple<>(i, i + 1))
+                : Result.empty());
+
+        assertEquals(10, list.lengthMemoized());
+        assertEquals(9, list.lastOption().getOrElse(0));
+    }
+
     private List<Character> convertStringToChars(String inputString) {
         java.util.List<Character> chars = inputString.chars()
                 .mapToObj(c -> (char) c)
