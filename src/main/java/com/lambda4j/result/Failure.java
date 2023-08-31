@@ -26,6 +26,14 @@ class Failure<V> extends Result<V> {
         return String.format("Failure(%s)", exception.getMessage());
     }
 
+    public boolean isSuccess() {
+        return false;
+    }
+
+    public boolean isFailure() {
+        return true;
+    }
+
     public V getOrElse(V defaultValue) {
         return defaultValue;
     }

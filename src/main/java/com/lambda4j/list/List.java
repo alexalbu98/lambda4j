@@ -2,6 +2,7 @@ package com.lambda4j.list;
 
 import com.lambda4j.function.Function;
 import com.lambda4j.recursion.TailCall;
+import com.lambda4j.result.Result;
 
 import static com.lambda4j.recursion.TailCall.ret;
 import static com.lambda4j.recursion.TailCall.sus;
@@ -11,6 +12,8 @@ public abstract class List<A> {
     }
 
     public abstract A head();
+
+    public abstract Result<A> headOption();
 
     public abstract List<A> tail();
 
@@ -37,6 +40,10 @@ public abstract class List<A> {
     public abstract List<A> filter(Function<? super A, Boolean> f);
 
     public abstract <B> List<B> flatMap(Function<? super A, List<B>> f);
+
+    public Result<A> lastOption() {
+        return foldLeft(Result.empty(), x -> Result::success);
+    }
 
     public List<A> append(A a) {
         return new Cons<>(a, this);
@@ -73,6 +80,17 @@ public abstract class List<A> {
 
     public static <A> List<A> flatten(List<List<A>> list) {
         return foldRight(list, List.list(), x -> y -> concat(x, y));
+    }
+
+    public static <A> List<A> flattenResult(List<Result<A>> list) {
+        return flatten(list.foldRight(list(), x -> y ->
+                y.append(x.map(List::list).getOrElse(list()))));
+    }
+
+    public static <A> Result<List<A>> sequence(List<Result<A>> list) {
+        return list
+                .filter(Result::isSuccess)
+                .foldRight(Result.success(List.list()), x -> y -> Result.map2(x, y, a -> b -> new Cons<>(a, b)));
     }
 
     public static <A, B> B foldRight(List<? extends A> list, B identity, Function<? super A, Function<? super B, ? extends B>> f) {

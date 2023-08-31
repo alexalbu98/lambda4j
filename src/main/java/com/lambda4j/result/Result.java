@@ -11,6 +11,10 @@ public abstract class Result<V> implements Serializable {
     Result() {
     }
 
+    public abstract boolean isSuccess();
+
+    public abstract boolean isFailure();
+
     public abstract V getOrElse(final V defaultValue);
 
     public abstract V getOrElse(final Supplier<? extends V> defaultValue);
@@ -99,5 +103,13 @@ public abstract class Result<V> implements Serializable {
                 return failure(e);
             }
         };
+    }
+
+    public static <A, B> Result<B> map(Result<A> a, Function<A, B> f) {
+        return lift(f).apply(a);
+    }
+
+    public static <A, B, C> Result<C> map2(Result<A> a, Result<B> b, Function<A, Function<? super B, ? extends C>> f) {
+        return a.flatMap(x -> b.map(y -> f.apply(x).apply(y)));
     }
 }

@@ -1,6 +1,7 @@
 package com.lambda4j;
 
 import com.lambda4j.list.List;
+import com.lambda4j.result.Result;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Collectors;
@@ -111,6 +112,36 @@ class ListTests {
         assertEquals(2, list.length());
         assertEquals("one", list.head());
 
+    }
+
+    @Test
+    void flatten_result_works() {
+        List<Result<String>> list = list(Result.success("test1"), Result.success("test2"), Result.failure("test3"));
+        List<String> flattened = flattenResult(list);
+
+        assertEquals(2, flattened.length());
+        assertEquals("test1", flattened.head());
+    }
+
+    @Test
+    void option_works() {
+        List<String> list = list("one", "two", "three");
+
+        Result<String> result = list.headOption();
+        assertEquals("one", result.getOrElse("0"));
+
+        result = list.lastOption();
+        assertEquals("three", result.getOrElse("0"));
+
+    }
+
+    @Test
+    void sequence_works() {
+        List<Result<String>> resultList = list(Result.success("test1"), Result.success("test2"), Result.failure("test3"), Result.empty());
+        Result<List<String>> result = sequence(resultList);
+        List<String> list = result.getOrElse(list());
+        assertEquals("test1", list.head());
+        assertEquals(2, list.lengthMemoized());
     }
 
     private List<Character> convertStringToChars(String inputString) {

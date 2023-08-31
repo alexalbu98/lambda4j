@@ -1,6 +1,7 @@
 package com.lambda4j.list;
 
 import com.lambda4j.function.Function;
+import com.lambda4j.result.Result;
 
 class Nil<A> extends List<A> {
     Nil() {
@@ -8,6 +9,10 @@ class Nil<A> extends List<A> {
 
     public A head() {
         throw new IllegalStateException("Head call on empty list");
+    }
+
+    public Result<A> headOption() {
+        return Result.empty();
     }
 
     public List<A> tail() {

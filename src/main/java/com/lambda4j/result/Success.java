@@ -16,6 +16,14 @@ class Success<V> extends Result<V> {
         return String.format("Success(%s)", value.toString());
     }
 
+    public boolean isSuccess() {
+        return true;
+    }
+
+    public boolean isFailure() {
+        return false;
+    }
+
     public V getOrElse(V defaultValue) {
         return value;
     }

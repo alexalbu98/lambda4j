@@ -9,6 +9,14 @@ class Empty<V> extends Result<V> {
         super();
     }
 
+    public boolean isSuccess() {
+        return false;
+    }
+
+    public boolean isFailure() {
+        return false;
+    }
+
     public V getOrElse(final V defaultValue) {
         return defaultValue;
     }

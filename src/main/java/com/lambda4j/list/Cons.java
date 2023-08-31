@@ -2,6 +2,7 @@ package com.lambda4j.list;
 
 import com.lambda4j.function.Function;
 import com.lambda4j.recursion.TailCall;
+import com.lambda4j.result.Result;
 
 import static com.lambda4j.recursion.TailCall.ret;
 import static com.lambda4j.recursion.TailCall.sus;
@@ -20,6 +21,10 @@ class Cons<A> extends List<A> {
 
     public A head() {
         return head;
+    }
+
+    public Result<A> headOption() {
+        return Result.success(head);
     }
 
     public List<A> tail() {
