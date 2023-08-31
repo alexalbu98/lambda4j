@@ -3,6 +3,7 @@ package com.lambda4j.list;
 import com.lambda4j.function.Function;
 import com.lambda4j.recursion.TailCall;
 import com.lambda4j.result.Result;
+import com.lambda4j.tuple.Tuple;
 
 import static com.lambda4j.recursion.TailCall.ret;
 import static com.lambda4j.recursion.TailCall.sus;
@@ -43,6 +44,13 @@ public abstract class List<A> {
 
     public Result<A> lastOption() {
         return foldLeft(Result.empty(), x -> Result::success);
+    }
+
+    public <A1, A2> Tuple<List<A1>, List<A2>> unzip(Function<A, Tuple<A1, A2>> f) {
+        return this.foldRight(new Tuple<>(list(), list()), a -> tl -> {
+            Tuple<A1, A2> t = f.apply(a);
+            return new Tuple<>(tl.first.append(t.first), tl.second.append(t.second));
+        });
     }
 
     public List<A> append(A a) {

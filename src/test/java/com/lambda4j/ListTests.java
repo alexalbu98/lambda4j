@@ -2,6 +2,7 @@ package com.lambda4j;
 
 import com.lambda4j.list.List;
 import com.lambda4j.result.Result;
+import com.lambda4j.tuple.Tuple;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Collectors;
@@ -149,8 +150,11 @@ class ListTests {
         List<String> list1 = list("one", "two", "three");
         List<String> list2 = list(" one", " two", " three");
         List<String> result = zipWith(list1, list2, x -> y -> x + y);
+        Tuple<List<String>, List<String>> listTuple = result.unzip(x -> new Tuple<>(x.split(" ")[0], x.split(" ")[1]));
         assertEquals("one one", result.head());
         assertEquals(3, result.lengthMemoized());
+        assertEquals(list1.toString(), listTuple.first.toString());
+        assertEquals(list2.map(String::trim).toString(), listTuple.second.toString());
     }
 
     private List<Character> convertStringToChars(String inputString) {
