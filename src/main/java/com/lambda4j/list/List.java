@@ -170,6 +170,10 @@ public abstract class List<A> {
         return n;
     }
 
+    public static <A> List<A> append(A head, List<A> tail) {
+        return new Cons<>(head, tail);
+    }
+
     public static <A> List<A> concat(List<? extends A> list1, List<A> list2) {
         return concat_(list1.reverse(), list2).eval();
     }
