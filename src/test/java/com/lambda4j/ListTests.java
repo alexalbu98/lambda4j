@@ -217,6 +217,22 @@ class ListTests {
         assertFalse(list2.forAll(x -> x.length() == 3));
     }
 
+    @Test
+    void split_list_at_works() {
+        List<String> list = list("one", "two", "three", "four", "five");
+        List<List<String>> lists = list.splitListAt(3);
+        assertEquals(2, lists.getAt(0).getOrElse(list()).lengthMemoized());
+        assertEquals(3, lists.getAt(1).getOrElse(list()).lengthMemoized());
+    }
+
+    @Test
+    void divide_works() {
+        List<String> list = list("one", "two", "three", "four", "five", "six");
+        List<List<String>> lists = list.divide(4);
+        assertEquals(2, lists.getAt(0).getOrElse(list()).lengthMemoized());
+        assertEquals(1, lists.getAt(1).getOrElse(list()).lengthMemoized());
+    }
+
     private List<Character> convertStringToChars(String inputString) {
         java.util.List<Character> chars = inputString.chars()
                 .mapToObj(c -> (char) c)

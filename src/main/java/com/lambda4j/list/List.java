@@ -79,6 +79,16 @@ public abstract class List<A> {
                 : splitAt(list(), this.reverse(), this.length() - index).eval();
     }
 
+    public List<List<A>> divide(int depth) {
+        return this.isEmpty()
+                ? list(this)
+                : divide(list(this), depth);
+    }
+
+    public List<List<A>> splitListAt(int i) {
+        return splitListAt(list(), this.reverse(), i).eval();
+    }
+
     public boolean hasSubsequence(List<A> sublist) {
         return hasSubList(this, sublist);
     }
@@ -177,6 +187,19 @@ public abstract class List<A> {
                 r.map(rt -> sus(() -> unfold(acc.append(rt.first), rt.second, f)));
         return result.getOrElse(ret(acc));
     }
+
+    private TailCall<List<List<A>>> splitListAt(List<A> acc, List<A> list, int i) {
+        return i == 0 || list.isEmpty()
+                ? ret(List.list(list.reverse(), acc))
+                : sus(() -> splitListAt(acc.append(list.head()), list.tail(), i - 1));
+    }
+
+    private List<List<A>> divide(List<List<A>> list, int depth) {
+        return list.head().length() < depth || depth < 2
+                ? list
+                : divide(list.flatMap(x -> x.splitListAt(x.length() / 2)), depth / 2);
+    }
+
 
     private static <A> TailCall<Boolean> hasSubList_(List<A> list, List<A> sub) {
         return list.isEmpty()
