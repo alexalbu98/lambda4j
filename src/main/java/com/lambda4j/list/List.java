@@ -8,6 +8,8 @@ import com.lambda4j.tuple.Tuple;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 
 import static com.lambda4j.recursion.TailCall.ret;
 import static com.lambda4j.recursion.TailCall.sus;
@@ -77,6 +79,38 @@ public abstract class List<A> {
                 : index > length()
                 ? splitAt(length())
                 : splitAt(list(), this.reverse(), this.length() - index).eval();
+    }
+
+    public <B> Result<B> parallelFoldLeft(ExecutorService es, B identity, Function<? super B, Function<? super A, ? extends B>> f, Function<? super B, Function<? super B, ? extends B>> agg) {
+        final int chunks = 1024;
+        final List<List<A>> dList = divide(chunks);
+        try {
+            List<B> result = dList.map(x -> es.submit(() -> x.foldLeft(identity, f))).map(x -> {
+                try {
+                    return x.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            return Result.success(result.foldLeft(identity, agg));
+        } catch (Exception e) {
+            return Result.failure(e);
+        }
+    }
+
+    public <B> Result<List<B>> parallelMap(ExecutorService es, Function<? super A, ? extends B> g) {
+        try {
+            return Result.success(this.map(x -> es.submit(() -> g.apply(x)))
+                    .map(x -> {
+                        try {
+                            return x.get();
+                        } catch (InterruptedException | ExecutionException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }));
+        } catch (Exception e) {
+            return Result.failure(e);
+        }
     }
 
     public List<List<A>> divide(int depth) {

@@ -6,6 +6,7 @@ import com.lambda4j.tuple.Tuple;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import static com.lambda4j.list.List.*;
@@ -83,11 +84,22 @@ class ListTests {
     }
 
     @Test
+    void parallel_fold_left_works() {
+        List<Integer> list = List.range(0, 100);
+        int result = ((100 / 2) * 99) / 100;
+        Result<Integer> left = list.parallelFoldLeft(Executors.newFixedThreadPool(4), 0, x -> y -> x + y, x -> y -> x + y);
+        assertEquals(result, left.getOrElse(0) / 100);
+    }
+
+    @Test
     void map_works() {
         List<String> list = list("hello", "world");
 
         List<String> map = list.map(s -> s + "1");
         assertEquals("hello1", map.head());
+
+        Result<List<String>> result = list.parallelMap(Executors.newFixedThreadPool(4), s -> s + "1");
+        assertEquals("hello1", result.getOrElse(list()).head());
     }
 
     @Test
