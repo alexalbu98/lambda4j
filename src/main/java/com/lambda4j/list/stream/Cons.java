@@ -2,6 +2,7 @@ package com.lambda4j.list.stream;
 
 import com.lambda4j.function.Function;
 import com.lambda4j.function.Supplier;
+import com.lambda4j.list.List;
 import com.lambda4j.recursion.TailCall;
 import com.lambda4j.result.Result;
 
@@ -85,6 +86,12 @@ public class Cons<A> extends Stream<A> {
 
     @Override
     public <B> B foldRight(Supplier<B> z, Function<A, Function<Supplier<B>, B>> f) {
-        return f.apply(head()).apply(() -> tail().foldRight(z, f));
+        return foldRight_(z, this, f).eval();
+    }
+
+    private static <A, B> TailCall<B> foldRight_(Supplier<B> acc, Stream<A> ts, Function<A, Function<Supplier<B>, B>> f) {
+        return ts.isEmpty()
+                ? ret(acc.get())
+                : sus(() -> foldRight_(() -> f.apply(ts.head()).apply(acc), ts.tail(), f));
     }
 }

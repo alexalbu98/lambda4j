@@ -1,6 +1,7 @@
 package com.lambda4j.list;
 
 import com.lambda4j.function.Function;
+import com.lambda4j.list.stream.Stream;
 import com.lambda4j.recursion.TailCall;
 import com.lambda4j.result.Result;
 import com.lambda4j.tuple.Tuple;
@@ -47,6 +48,10 @@ public abstract class List<A> {
     public abstract List<A> filter(Function<? super A, Boolean> f);
 
     public abstract <B> List<B> flatMap(Function<? super A, List<B>> f);
+
+    public Stream<A> toStream() {
+        return Stream.fromList(this);
+    }
 
     public Result<A> lastOption() {
         return foldLeft(Result.empty(), x -> Result::success);

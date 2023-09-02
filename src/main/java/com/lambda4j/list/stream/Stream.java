@@ -5,6 +5,7 @@ import com.lambda4j.function.Supplier;
 import com.lambda4j.list.List;
 import com.lambda4j.recursion.TailCall;
 import com.lambda4j.result.Result;
+import com.lambda4j.tuple.Tuple;
 
 import static com.lambda4j.recursion.TailCall.ret;
 import static com.lambda4j.recursion.TailCall.sus;
@@ -31,6 +32,7 @@ public abstract class Stream<A> {
 
     public abstract <B> B foldRight(Supplier<B> z, Function<A, Function<Supplier<B>, B>> f);
 
+
     public boolean exists(Function<A, Boolean> p) {
         return exists(this, p).eval();
     }
@@ -53,8 +55,26 @@ public abstract class Stream<A> {
         return foldRight(s, a -> b -> cons(() -> a, b));
     }
 
+    public Result<A> find(Function<A, Boolean> p) {
+        return filter(p).headOption();
+    }
+
+    public <B> Stream<B> map(Function<A, B> f) {
+        return foldRight(Stream::empty, a -> b -> cons(() -> f.apply(a), b));
+    }
+
     public <B> Stream<B> flatMap(Function<A, Stream<B>> f) {
         return foldRight(Stream::empty, a -> b -> f.apply(a).append(b));
+    }
+
+    public static <A> Stream<A> fromList(List<A> list) {
+        return fromList(list, empty()).eval();
+    }
+
+    private static <A> TailCall<Stream<A>> fromList(List<A> list, Stream<A> stream) {
+        return list.isEmpty()
+                ? ret(stream)
+                : sus(() -> fromList(list.tail(), cons(list::head, () -> stream)));
     }
 
     public List<A> toList() {
@@ -78,5 +98,18 @@ public abstract class Stream<A> {
 
     public static Stream<Integer> from(int i) {
         return cons(() -> i, () -> from(i + 1));
+    }
+
+    public static <A> Stream<A> repeat(A a) {
+        return cons(() -> a, () -> repeat(a));
+    }
+
+    public static <A> Stream<A> iterate(A seed, Function<A, A> f) {
+        return cons(() -> seed, () -> iterate(f.apply(seed), f));
+    }
+
+    public static <A, S> Stream<A> unfold(S z, Function<S, Result<Tuple<A, S>>> f) {
+        return f.apply(z).map(x -> cons(() -> x.first,
+                () -> unfold(x.second, f))).getOrElse(empty());
     }
 }
