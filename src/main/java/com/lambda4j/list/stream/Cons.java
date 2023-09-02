@@ -50,13 +50,13 @@ public class Cons<A> extends Stream<A> {
     public Stream<A> take(int n) {
         return n <= 0
                 ? empty()
-                : append(head, () -> tail().take(n - 1));
+                : cons(head, () -> tail().take(n - 1));
     }
 
     @Override
     public Stream<A> takeWhile(Function<A, Boolean> p) {
         return p.apply(head())
-                ? append(head, () -> tail().takeWhile(p))
+                ? cons(head, () -> tail().takeWhile(p))
                 : empty();
     }
 

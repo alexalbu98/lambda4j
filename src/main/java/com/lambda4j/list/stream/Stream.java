@@ -37,7 +37,7 @@ public abstract class Stream<A> {
 
     public Stream<A> filter(Function<A, Boolean> p) {
         return foldRight(Stream::empty, a -> b -> p.apply(a)
-                ? append(() -> a, b)
+                ? cons(() -> a, b)
                 : b.get());
     }
 
@@ -47,6 +47,14 @@ public abstract class Stream<A> {
                 : p.apply(s.head())
                 ? ret(true)
                 : sus(() -> exists(s.tail(), p));
+    }
+
+    public Stream<A> append(Supplier<Stream<A>> s) {
+        return foldRight(s, a -> b -> cons(() -> a, b));
+    }
+
+    public <B> Stream<B> flatMap(Function<A, Stream<B>> f) {
+        return foldRight(Stream::empty, a -> b -> f.apply(a).append(b));
     }
 
     public List<A> toList() {
@@ -63,11 +71,12 @@ public abstract class Stream<A> {
         return new Empty<>();
     }
 
-    static <A> Stream<A> append(Supplier<A> hd, Supplier<Stream<A>> tl) {
+
+    static <A> Stream<A> cons(Supplier<A> hd, Supplier<Stream<A>> tl) {
         return new Cons<>(hd, tl);
     }
 
     public static Stream<Integer> from(int i) {
-        return append(() -> i, () -> from(i + 1));
+        return cons(() -> i, () -> from(i + 1));
     }
 }
