@@ -89,9 +89,20 @@ public class Cons<A> extends Stream<A> {
         return foldRight_(z, this, f).eval();
     }
 
-    private static <A, B> TailCall<B> foldRight_(Supplier<B> acc, Stream<A> ts, Function<A, Function<Supplier<B>, B>> f) {
-        return ts.isEmpty()
+    private static <A, B> TailCall<B> foldRight_(Supplier<B> acc, Stream<A> stream, Function<A, Function<Supplier<B>, B>> f) {
+        return stream.isEmpty()
                 ? ret(acc.get())
-                : sus(() -> foldRight_(() -> f.apply(ts.head()).apply(acc), ts.tail(), f));
+                : sus(() -> foldRight_(() -> f.apply(stream.head()).apply(acc), stream.tail(), f));
+    }
+
+    @Override
+    public <B> B foldLeft(Supplier<B> z, Function<Supplier<B>, Function<A, B>> f) {
+        return foldLeft_(z, this, f).eval();
+    }
+
+    private static <A, B> TailCall<B> foldLeft_(Supplier<B> acc, Stream<A> stream, Function<Supplier<B>, Function<A, B>> f) {
+        return stream.isEmpty()
+                ? ret(acc.get())
+                : sus(() -> foldLeft_(() -> f.apply(acc).apply(stream.head()), stream.tail(), f));
     }
 }

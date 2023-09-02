@@ -32,6 +32,7 @@ public abstract class Stream<A> {
 
     public abstract <B> B foldRight(Supplier<B> z, Function<A, Function<Supplier<B>, B>> f);
 
+    public abstract <B> B foldLeft(Supplier<B> z, Function<Supplier<B>, Function<A, B>> f);
 
     public boolean exists(Function<A, Boolean> p) {
         return exists(this, p).eval();

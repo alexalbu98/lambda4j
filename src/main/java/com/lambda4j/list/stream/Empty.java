@@ -49,4 +49,9 @@ class Empty<A> extends Stream<A> {
     public <B> B foldRight(Supplier<B> z, Function<A, Function<Supplier<B>, B>> f) {
         return z.get();
     }
+
+    @Override
+    public <B> B foldLeft(Supplier<B> z, Function<Supplier<B>, Function<A, B>> f) {
+        return z.get();
+    }
 }

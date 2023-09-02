@@ -5,6 +5,7 @@ import com.lambda4j.list.stream.Stream;
 import org.junit.jupiter.api.Test;
 
 import static com.lambda4j.list.List.list;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class StreamTests {
@@ -39,6 +40,20 @@ public class StreamTests {
         assertTrue(characterStream.exists(x -> x == 'e'));
         assertTrue(characterStream.exists(x -> x == 's'));
         assertTrue(characterStream.exists(x -> x == 't'));
+    }
+
+    @Test
+    void fold_right_works() {
+        Stream<Integer> stream = list(1, 2, 3, 4).toStream();
+        int result = stream.foldRight(() -> 0, x -> y -> x + y.get());
+        assertEquals(10, result);
+    }
+
+    @Test
+    void fold_left_works() {
+        Stream<String> stream = list("hello", "world").toStream();
+        String result = stream.foldLeft(() -> "", x -> y -> x.get() + y);
+        assertEquals("worldhello", result);
     }
 
     private List<Character> toList(char[] characters) {
