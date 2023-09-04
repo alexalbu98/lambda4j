@@ -38,6 +38,16 @@ public abstract class Stream<A> {
         return exists(this, p).eval();
     }
 
+    public static <T> Stream<T> fill(int n, Supplier<T> elem) {
+        return fill(n, empty(), elem).eval();
+    }
+
+    private static <T> TailCall<Stream<T>> fill(int n, Stream<T> acc, Supplier<T> elem) {
+        return n == 0
+                ? ret(acc)
+                : sus(() -> fill(n - 1, new Cons<>(elem, () -> acc), elem));
+    }
+
     public Stream<A> filter(Function<A, Boolean> p) {
         return foldRight(Stream::empty, a -> b -> p.apply(a)
                 ? cons(() -> a, b)

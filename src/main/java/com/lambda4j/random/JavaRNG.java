@@ -1,6 +1,6 @@
 package com.lambda4j.random;
 
-import com.lambda4j.tuple.Tuple;
+import com.lambda4j.state.StateTuple;
 
 import java.util.Random;
 
@@ -13,8 +13,8 @@ public class JavaRNG implements RNG {
     }
 
     @Override
-    public Tuple<Integer, RNG> nextInt() {
-        return new Tuple<>(random.nextInt(), this);
+    public StateTuple<Integer, RNG> nextInt() {
+        return new StateTuple<>(random.nextInt(), this);
     }
 
     public static RNG rng(long seed) {

@@ -64,4 +64,9 @@ class Success<V> extends Result<V> {
         ef.apply(value);
         return empty();
     }
+
+    public Result<String> forEachOrFail(Effect<V> c) {
+        c.apply(this.value);
+        return empty();
+    }
 }

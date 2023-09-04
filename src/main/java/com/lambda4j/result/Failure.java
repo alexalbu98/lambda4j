@@ -65,4 +65,8 @@ class Failure<V> extends Result<V> {
     public Result<RuntimeException> forEachOrException(Effect<V> ef) {
         return success(exception);
     }
+
+    public Result<String> forEachOrFail(Effect<V> c) {
+        return success(exception.getMessage());
+    }
 }

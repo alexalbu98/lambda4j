@@ -31,6 +31,8 @@ public abstract class Result<V> implements Serializable {
 
     public abstract Result<RuntimeException> forEachOrException(Effect<V> ef);
 
+    public abstract Result<String> forEachOrFail(Effect<V> c);
+
 
     public Result<V> orElse(Supplier<Result<V>> defaultValue) {
         return map(x -> this).getOrElse(defaultValue);

@@ -45,6 +45,10 @@ class Empty<V> extends Result<V> {
         return empty();
     }
 
+    public Result<String> forEachOrFail(Effect<V> c) {
+        return empty();
+    }
+
     public String toString() {
         return "Empty()";
     }
